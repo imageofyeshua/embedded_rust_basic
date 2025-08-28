@@ -34,4 +34,18 @@ fn main() {
     // in rust char type consumes 4 bytes
     // Unicode Scalar Value (USV) of '+' is stored in y
     // USV of character '+' = U+002B (decimal 43)
+
+    let infinity_symbol = '\u{221E}';
+    println!("symbol = {}, usv = {}", infinity_symbol, infinity_symbol as u32);
+
+    let tm = '\u{00AE}';
+    println!("trade mark: {}", tm);
+
+    let usv_of_inf = 0x221e_u32;
+
+    if let Some(inf_symbol) = char::from_u32(usv_of_inf) {
+        println!("symbol = {}", inf_symbol);
+    } else {
+        println!("not a valid unicode scalar value");
+    }
 }
