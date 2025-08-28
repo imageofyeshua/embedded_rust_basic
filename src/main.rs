@@ -1,3 +1,8 @@
+use std::f32::consts;
+
+static mut COUNTER: u32 = 0;
+const MAX_VALUE: u32 = 100;
+
 fn main() {
     let x: Option<&i32> = None;
     println!("{:?}", x);
@@ -48,4 +53,11 @@ fn main() {
     } else {
         println!("not a valid unicode scalar value");
     }
+
+    /*
+    unsafe {
+        COUNTER += 1;
+        println!("counter: {}", COUNTER);
+    }
+    */
 }
