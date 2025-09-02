@@ -131,5 +131,28 @@ fn main() {
     // there can be multiple immutable borrows
     // but not in the case of mutable borrows
     // and you cannot mix immutable borrow with mutable borrow
+
+    // slice - a borrowed portion of contiguous data
+
+    let mut the_array: [i32; 5] = [10, 22, -3, 94, 100];
+
+    // let s1 = &the_array[1..3]; // items 2 and 3
+    // let s2 = &the_array[..];
+    // let s3 = &the_array[0..=1];
+    let s4 = &the_array[2..4];
+    let mut sum = 0;
+
+    // println!("s1: {:?}, s2: {:?}, s3: {:?}", s1, s2, s3);
+    // s4[0] = 336;
+    println!("the array: {:?}", the_array);
+    println!("s4: {:?}", s4);
+
+    for i in s4 {
+        sum += i;
+    }
+
+    println!("sum : {}", sum);
+
+
     
 }
