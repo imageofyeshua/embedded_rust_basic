@@ -119,8 +119,17 @@ fn main() {
     println!("value is {:p}", &ref_of_value); // reference itself memory address
 
     // borrow
-    let num1 = 50;
-    
-    let ref_of_num1 = &num1;
+    let mut num1 = 50; // mutable referent
+    let ref_of_num1 = &mut num1; // immutable borrow
+    *ref_of_num1 = 100;
+    println!("num1 : {}", num1);
+
+    let num2 = 120; // immutable referent
+    let ref_of_num2 = &num2;
+    println!("num2 : {}", ref_of_num2);
+
+    // there can be multiple immutable borrows
+    // but not in the case of mutable borrows
+    // and you cannot mix immutable borrow with mutable borrow
     
 }
