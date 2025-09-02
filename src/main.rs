@@ -109,4 +109,13 @@ fn main() {
     }
 
     println!("sum: {}", sum);
+
+    // reference
+    let value = 42;
+    let ref_of_value = &value;
+    println!("value is {}", *ref_of_value); // manual dereferencing
+    println!("value is {}", ref_of_value); // automatic dereferencing
+    println!("value is {:p}", ref_of_value); // referenced memory address
+    println!("value is {:p}", &ref_of_value); // reference itself memory address
+    
 }
