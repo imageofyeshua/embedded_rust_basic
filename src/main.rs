@@ -1,5 +1,6 @@
-use std::f32::consts;
+use std::{f32::consts, panic, sync::atomic::{AtomicBool, Ordering}};
 
+static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
 const MAX_VALUE: u32 = 100;
 
@@ -60,4 +61,52 @@ fn main() {
         println!("counter: {}", COUNTER);
     }
     */
+
+
+    // give custom panic hook
+    panic::set_hook(Box::new(|info| {
+        FAIL_SAFE_MODE.store(true, Ordering::SeqCst);
+        println!("Panic occurred: {}", info);
+        println!("Entering fail-safe mode...");
+    }));
+
+    // wrap the potentially panicking code in catch_unwind
+    let result = panic::catch_unwind(|| {
+        let buffer = [1, 2, 3, 4, 5];
+
+        for i in 0..10 {
+            // panics for i >= 5
+            println!("Accessing index {}: {}", i, buffer[i]);
+        }
+    });
+
+    if FAIL_SAFE_MODE.load(Ordering::SeqCst) {
+        println!("System is now in fail-safe mode.");
+    }
+
+    match result {
+        Ok(_) => println!("No panic occurred."),
+        Err(_) => println!("Panic caught! Execution continues."),
+    }
+
+    let my_array = [2.5, 4.0, 3.8];
+    let your_array = ['+', '-'];
+    let his_array = [1, 2, 3_u8, 67, 89];
+
+    println!("{:?}", your_array);
+
+    let buffer = [0_u8; 10];
+    let memory = [4.5; 7];
+    println!("{:?}", buffer);
+    println!("{:?}", memory);
+
+    let her_array = [10, -67, 88, -5, -2, 99, 132, 32];
+
+    let mut sum = 0;
+
+    for num in her_array {
+        sum += num;
+    }
+
+    println!("sum: {}", sum);
 }
