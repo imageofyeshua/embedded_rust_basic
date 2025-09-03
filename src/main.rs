@@ -211,5 +211,19 @@ fn main() {
     } else {
         println!("Array2 is valid");
     }
+
+    // if - let 
+    // a shorthand for a match statement with just one pattern
+
+    let point = (2, 4);
+
+    if let (_, y @ 1..=4) = point {
+        println!("y = {} is withing the range 1..=4", y);
+    } else  if let (0, 0) = point {
+        println!("Point is at the origin");
+    } else {
+        println!("Something else here...");
+    }
+
     
 }
