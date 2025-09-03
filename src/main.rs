@@ -153,6 +153,20 @@ fn main() {
 
     println!("sum : {}", sum);
 
+    // if - else
+    let age = 19;
+
+    let message = if age < 18 {
+        println!("this is if block");
+        // "you cannot vote"
+        100;
+    } else {
+        println!("this is else block");
+        // "you still not voting because systems is rigged^^"
+        2000; // returns unit type ()
+    };
+
+    println!("{:?}", message);
 
     
 }
