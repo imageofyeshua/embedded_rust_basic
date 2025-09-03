@@ -1,4 +1,4 @@
-use std::{f32::consts, panic, sync::atomic::{AtomicBool, Ordering}};
+use std::{array, f32::consts, panic, sync::atomic::{AtomicBool, Ordering}};
 
 static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
@@ -168,5 +168,48 @@ fn main() {
 
     println!("{:?}", message);
 
+    // match
+    let point = (3, -7);
+
+    match point {
+        (_, y) if y < 0 => {
+            println!("Second element is negative: {}", y);
+            println!("Take action 1");
+        }
+        (0, 0) => {
+            println!("Point is zero");
+            println!("Take action 2");
+        }
+        _ => println!("All fine"),
+    }
+
+    let array1 = [1, 2, 3, -1];
+
+    let invalid_array = match array1 {
+        [n,_,_,_] | [_,n,_,_] |
+        [_,_,n,_] | [_,_,_,n] if n < 0 => {
+            true
+        }
+        _ => false,
+    };
+
+    if invalid_array {
+        println!("Array is invalid");
+    } else {
+        println!("Array is valid");
+    }
+
+    // match macro >> matches!(expression, pattern)
+    let array2 = [5, 6, 7, -8];
+    let array_validity = matches!(array2,
+        [n,_,_,_] | [_,n,_,_] |
+        [_,_,n,_] | [_,_,_,n] if n < 0
+    );
+
+    if array_validity {
+        println!("Array2 is invalid");
+    } else {
+        println!("Array2 is valid");
+    }
     
 }
