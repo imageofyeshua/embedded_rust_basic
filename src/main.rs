@@ -1,10 +1,37 @@
-use std::{array, f32::consts, panic, sync::atomic::{AtomicBool, Ordering}};
+use std::{array, f32::consts, panic, sync::atomic::{AtomicBool, Ordering}, thread};
 
 static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
 const MAX_VALUE: u32 = 100;
 
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+struct Circle {
+    radius: f32,
+    angle: f32,
+}
+
+fn print_shape_point(point: &Point) {
+    println!("Point: x = {}, y = {}", point.x, point.y);
+}
+
+fn print_shape_circle(circle: &Circle) {
+    println!("Circle: radius = {:.2}, angle = {:.2}", circle.radius, circle.angle);
+}
+
 fn main() {
+    let p = Point { x: 10, y: 20};
+    let c = Circle { radius: 5.5, angle: 90.0 };
+
+    // mismatched type
+    // print_shape_point(&c);
+
+    print_shape_point(&p);
+    print_shape_circle(&c);
+
     let x: Option<&i32> = None;
     println!("{:?}", x);
 
@@ -225,5 +252,23 @@ fn main() {
         println!("Something else here...");
     }
 
+    // threads
+    
+    // immutable data
+    let data = 42;
+
+    /*
+    let handle1 = thread::spawn(|| {
+        println!("Thread 1 reads data: {}", data);
+    });
+
+    // impossible >> owndership expands the lifetime of thread 1
+    let handle2 = thread::spawn(|| {
+        println!("Thread 2 reads data: {}", data);
+    });
+    */
+
+    // handle1.join().unwrap();
+    // handle2.join().unwrap();
     
 }
