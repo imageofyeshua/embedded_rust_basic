@@ -271,4 +271,30 @@ fn main() {
     // handle1.join().unwrap();
     // handle2.join().unwrap();
     
+    // bit operation
+    let x = 0b0000_1111_u8;
+    let y = !x;
+    println!("y: {:b}", y);
+
+    let f = 0xFF;
+    let g = 0xF;
+    let h = f & g;
+    println!("h: {:b}", h);
+
+    let i = 0x1A;
+    let j = 0xF;
+    let k = i | j;
+    println!("k: {:b}", k);
+
+    let l = 0b0011_0011_u8;
+    let m = l << 2;
+    println!("m: {:b}", m);
+
+    let n = 0x80_u8;
+    let o = n >> 2;
+    println!("o: {:b}", o);
+
+    let p = 0x80_i16;
+    let q = p >> 2;
+    println!("q: {}", q);
 }
