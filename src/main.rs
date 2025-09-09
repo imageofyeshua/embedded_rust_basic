@@ -1,3 +1,4 @@
+use core::slice;
 use std::{array, f32::consts, panic, sync::atomic::{AtomicBool, Ordering}, thread};
 
 static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
@@ -297,4 +298,33 @@ fn main() {
     let p = 0x80_i16;
     let q = p >> 2;
     println!("q: {}", q);
+
+    // string
+
+    let mut greeting = String::from("Good morning");
+
+    greeting.replace_range(5.., "evening"); 
+
+    greeting.push_str(", world!");
+
+    println!("{}", greeting);
+
+    let mut message = String::new();
+    message.push_str("Daniel, Park");
+    println!("{}", message);
+
+    let my_string = "Hello, there".to_string();
+
+    let mut num_as_string = 3.1416.to_string();
+    num_as_string.insert_str(0, "PI = ");
+    println!("{}", num_as_string);
+
+    let mut hiroo = "Hello, there".to_string();
+    let whatsup = &hiroo[0..5];
+    println!("{}", whatsup);
+
+    let mut numbers = [1, 2, 3, 4, 5];
+    let slice_of_numbers = &mut numbers[1..4];
+    slice_of_numbers[0] = 99;
+    println!("{:?}", slice_of_numbers);
 }
