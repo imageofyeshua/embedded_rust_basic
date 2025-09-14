@@ -17,6 +17,12 @@ struct Circle {
 }
 
 #[derive(Debug, Default)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+#[derive(Debug, Default)]
 struct Person {
     name: String,
     age: u8,
@@ -30,6 +36,20 @@ struct Process {
     name: String,
     pid: u32,
     group: String,
+}
+
+impl Rectangle {
+    fn new(width: u32, height: u32) -> Self {
+        Rectangle { width, height }
+    }
+
+    fn new_with_default() -> Self {
+        Rectangle::default()
+    }
+
+    fn area(&self) -> f32 {
+        (self.width * self.height) as f32
+    }
 }
 
 impl Point {
@@ -48,6 +68,11 @@ impl Point {
     // method that takes the ownership of self
     fn into_tuple(self) -> (f32, f32) {
         (self.x, self.y)
+    }
+
+    // associated function
+    fn from_tuple(coords: &(f32, f32)) -> Point {
+        Point { x: coords.0, y: coords.1 }
     }
 }
 
@@ -89,6 +114,17 @@ fn main() {
     println!("Points as tuple: {:?}", points);
 
     println!("{:?}", p); // Error
+    
+    let tuple = (10.0, 20.0);
+    let q = Point::from_tuple(&tuple);
+    println!("Point from tuple: ({}, {})", q.x, q.y);
+
+    println!("{:?}", Rectangle::new(30, 50));
+    println!("{:?}", Rectangle::new_with_default());
+
+    let rect = Rectangle::new(24, 59);
+    println!("area: {}", rect.area());
+
     /*
        let user = Person::default();
        let p1 = Person {
