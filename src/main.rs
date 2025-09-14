@@ -5,9 +5,10 @@ static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
 const MAX_VALUE: u32 = 100;
 
+#[derive(Debug, Copy, Clone)]
 struct Point {
-    x: i32,
-    y: i32,
+    x: f32,
+    y: f32,
 }
 
 struct Circle {
@@ -30,6 +31,26 @@ struct Process {
     pid: u32,
     group: String,
 }
+
+impl Point {
+    // method that borrows self immutably
+    fn distance_from_origin(self: &Point) -> f32 {
+        // sqrt(x2 + y2)
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+    
+    // method that borrows self mutably
+    fn translate(&mut self, dx: f32, dy: f32) {
+        self.x += dx;
+        self.y += dy;
+    }
+
+    // method that takes the ownership of self
+    fn into_tuple(self) -> (f32, f32) {
+        (self.x, self.y)
+    }
+}
+
 
 fn update_person_age(person: &mut Person, new_age: u8) {
     person.age = new_age;
@@ -59,40 +80,49 @@ fn main() {
 
     println!("Name: {}, Age: {}", p.name, p.age);
 
+    let mut p = Point { x: 3.0, y: 4.0 };
+    println!("distance: {}", p.distance_from_origin());
+    p.translate(0.1, 0.2);
+    println!("modified points: {:?}", p);
+
+    let points = p.into_tuple();
+    println!("Points as tuple: {:?}", points);
+
+    println!("{:?}", p); // Error
     /*
-    let user = Person::default();
-    let p1 = Person {
-        name: String::from("Daniel"),
-        is_male: true,
-        ..Default::default()
-    };
+       let user = Person::default();
+       let p1 = Person {
+       name: String::from("Daniel"),
+       is_male: true,
+       ..Default::default()
+       };
 
-    println!("{:?}", user);
-    println!("{:?}", p1);
+       println!("{:?}", user);
+       println!("{:?}", p1);
 
-    let process1 = Process {
-        name: String::from("Ping"),
-        pid: 0x1234,
-        group: String::from("Networking"),
-    };
-    println!("Process 1: {:#X?}", process1);
+       let process1 = Process {
+       name: String::from("Ping"),
+       pid: 0x1234,
+       group: String::from("Networking"),
+       };
+       println!("Process 1: {:#X?}", process1);
 
-    let process2 = Process {
-        name: String::from("Route"),
-        ..process1
-    };
-    println!("Process 2: {:#X?}", process2);
+       let process2 = Process {
+       name: String::from("Route"),
+       ..process1
+       };
+       println!("Process 2: {:#X?}", process2);
 
-    let process3 = Process {
-        pid: 0x3456,
-        group: String::from("Security"),
-        ..process2
-    };
-    println!("Process 3: {:#X?}", process3);
-    */
+       let process3 = Process {
+       pid: 0x3456,
+       group: String::from("Security"),
+       ..process2
+       };
+       println!("Process 3: {:#X?}", process3);
+       */
     /*
-    let p = Point { x: 10, y: 20};
-    let c = Circle { radius: 5.5, angle: 90.0 };
+       let p = Point { x: 10, y: 20};
+       let c = Circle { radius: 5.5, angle: 90.0 };
 
     // mismatched type
     // print_shape_point(&c);
@@ -129,7 +159,7 @@ fn main() {
     // x type is u8
     // x consumes 1 byte
     // ASCII code of '+' is stored in x which is 43
-    
+
     let y = '+';
     // y type is char
     // in rust char type consumes 4 bytes
@@ -145,15 +175,15 @@ fn main() {
     let usv_of_inf = 0x221e_u32;
 
     if let Some(inf_symbol) = char::from_u32(usv_of_inf) {
-        println!("symbol = {}", inf_symbol);
+    println!("symbol = {}", inf_symbol);
     } else {
-        println!("not a valid unicode scalar value");
+    println!("not a valid unicode scalar value");
     }
 
     /*
     unsafe {
-        COUNTER += 1;
-        println!("counter: {}", COUNTER);
+    COUNTER += 1;
+    println!("counter: {}", COUNTER);
     }
     */
 
@@ -282,9 +312,9 @@ fn main() {
 
     let invalid_array = match array1 {
         [n,_,_,_] | [_,n,_,_] |
-        [_,_,n,_] | [_,_,_,n] if n < 0 => {
-            true
-        }
+            [_,_,n,_] | [_,_,_,n] if n < 0 => {
+                true
+            }
         _ => false,
     };
 
@@ -321,24 +351,24 @@ fn main() {
     }
 
     // threads
-    
+
     // immutable data
     let data = 42;
 
     /*
-    let handle1 = thread::spawn(|| {
-        println!("Thread 1 reads data: {}", data);
-    });
+       let handle1 = thread::spawn(|| {
+       println!("Thread 1 reads data: {}", data);
+       });
 
     // impossible >> owndership expands the lifetime of thread 1
     let handle2 = thread::spawn(|| {
-        println!("Thread 2 reads data: {}", data);
+    println!("Thread 2 reads data: {}", data);
     });
     */
 
     // handle1.join().unwrap();
     // handle2.join().unwrap();
-    
+
     // bit operation
     let x = 0b0000_1111_u8;
     let y = !x;
