@@ -15,6 +15,27 @@ struct Circle {
     angle: f32,
 }
 
+#[derive(Debug, Default)]
+struct Person {
+    name: String,
+    age: u8,
+    is_male: bool,
+    height: f32,
+    initial: char
+}
+
+#[derive(Debug)]
+struct Process {
+    name: String,
+    pid: u32,
+    group: String,
+}
+
+fn update_person_age(person: &mut Person, new_age: u8) {
+    person.age = new_age;
+    // (*person).age = new_age; // OK
+}
+
 fn print_shape_point(point: &Point) {
     println!("Point: x = {}, y = {}", point.x, point.y);
 }
@@ -23,7 +44,53 @@ fn print_shape_circle(circle: &Circle) {
     println!("Circle: radius = {:.2}, angle = {:.2}", circle.radius, circle.angle);
 }
 
+#[allow(unused_variables)]
 fn main() {
+
+    let mut p = Person {
+        name: String::from("Alice"),
+        age: 25,
+        ..Default::default()
+    };
+
+    println!("Name: {}, Age: {}", p.name, p.age);
+
+    update_person_age(&mut p, 30);
+
+    println!("Name: {}, Age: {}", p.name, p.age);
+
+    /*
+    let user = Person::default();
+    let p1 = Person {
+        name: String::from("Daniel"),
+        is_male: true,
+        ..Default::default()
+    };
+
+    println!("{:?}", user);
+    println!("{:?}", p1);
+
+    let process1 = Process {
+        name: String::from("Ping"),
+        pid: 0x1234,
+        group: String::from("Networking"),
+    };
+    println!("Process 1: {:#X?}", process1);
+
+    let process2 = Process {
+        name: String::from("Route"),
+        ..process1
+    };
+    println!("Process 2: {:#X?}", process2);
+
+    let process3 = Process {
+        pid: 0x3456,
+        group: String::from("Security"),
+        ..process2
+    };
+    println!("Process 3: {:#X?}", process3);
+    */
+    /*
     let p = Point { x: 10, y: 20};
     let c = Circle { radius: 5.5, angle: 90.0 };
 
@@ -327,4 +394,5 @@ fn main() {
     let slice_of_numbers = &mut numbers[1..4];
     slice_of_numbers[0] = 99;
     println!("{:?}", slice_of_numbers);
+    */
 }
