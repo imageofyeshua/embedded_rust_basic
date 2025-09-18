@@ -5,7 +5,15 @@ static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
 const MAX_VALUE: u32 = 100;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(PartialEq)]
+enum CarStatus {
+    Up(u32, i32, i32),
+    Down{speed: u32},
+    Pause(Point),
+    Broken
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
 struct Point {
     x: f32,
     y: f32,
@@ -58,7 +66,7 @@ impl Point {
         // sqrt(x2 + y2)
         (self.x.powi(2) + self.y.powi(2)).sqrt()
     }
-    
+
     // method that borrows self mutably
     fn translate(&mut self, dx: f32, dy: f32) {
         self.x += dx;
@@ -114,7 +122,7 @@ fn main() {
     println!("Points as tuple: {:?}", points);
 
     println!("{:?}", p); // Error
-    
+
     let tuple = (10.0, 20.0);
     let q = Point::from_tuple(&tuple);
     println!("Point from tuple: ({}, {})", q.x, q.y);
@@ -125,40 +133,63 @@ fn main() {
     let rect = Rectangle::new(24, 59);
     println!("area: {}", rect.area());
 
+    let mut current_car_status = CarStatus::Pause(Point {x: 0.0, y: 0.0});
+
+    current_car_status = CarStatus::Up(100, 67, 78);
+
+    // if Car is in pause
+    if current_car_status == CarStatus::Broken {
+        println!("Yo, car is broken");
+    }
+
+    current_car_status = CarStatus::Pause(Point {x: 23.0, y: 67.9});
+
+    match current_car_status {
+        CarStatus::Up(a, ..) => {
+            println!("Car is moving up with speed {}", a);
+        }
+
+        CarStatus::Pause(Point {x, ..}) => {
+            println!("Car is not moving and x is {}", x);
+        }
+
+        _ => println!("Car is not moving up"),
+    }
+
     /*
-       let user = Person::default();
-       let p1 = Person {
-       name: String::from("Daniel"),
-       is_male: true,
-       ..Default::default()
-       };
+    let user = Person::default();
+    let p1 = Person {
+    name: String::from("Daniel"),
+    is_male: true,
+    ..Default::default()
+    };
 
-       println!("{:?}", user);
-       println!("{:?}", p1);
+    println!("{:?}", user);
+    println!("{:?}", p1);
 
-       let process1 = Process {
-       name: String::from("Ping"),
-       pid: 0x1234,
-       group: String::from("Networking"),
-       };
-       println!("Process 1: {:#X?}", process1);
+    let process1 = Process {
+    name: String::from("Ping"),
+    pid: 0x1234,
+    group: String::from("Networking"),
+    };
+    println!("Process 1: {:#X?}", process1);
 
-       let process2 = Process {
-       name: String::from("Route"),
-       ..process1
-       };
-       println!("Process 2: {:#X?}", process2);
+    let process2 = Process {
+    name: String::from("Route"),
+    ..process1
+    };
+    println!("Process 2: {:#X?}", process2);
 
-       let process3 = Process {
-       pid: 0x3456,
-       group: String::from("Security"),
-       ..process2
-       };
-       println!("Process 3: {:#X?}", process3);
-       */
+    let process3 = Process {
+    pid: 0x3456,
+    group: String::from("Security"),
+    ..process2
+    };
+    println!("Process 3: {:#X?}", process3);
+    */
     /*
-       let p = Point { x: 10, y: 20};
-       let c = Circle { radius: 5.5, angle: 90.0 };
+    let p = Point { x: 10, y: 20};
+    let c = Circle { radius: 5.5, angle: 90.0 };
 
     // mismatched type
     // print_shape_point(&c);
@@ -226,28 +257,28 @@ fn main() {
 
     // give custom panic hook
     panic::set_hook(Box::new(|info| {
-        FAIL_SAFE_MODE.store(true, Ordering::SeqCst);
-        println!("Panic occurred: {}", info);
-        println!("Entering fail-safe mode...");
+    FAIL_SAFE_MODE.store(true, Ordering::SeqCst);
+    println!("Panic occurred: {}", info);
+    println!("Entering fail-safe mode...");
     }));
 
     // wrap the potentially panicking code in catch_unwind
     let result = panic::catch_unwind(|| {
-        let buffer = [1, 2, 3, 4, 5];
+    let buffer = [1, 2, 3, 4, 5];
 
-        for i in 0..10 {
-            // panics for i >= 5
-            println!("Accessing index {}: {}", i, buffer[i]);
-        }
+    for i in 0..10 {
+    // panics for i >= 5
+    println!("Accessing index {}: {}", i, buffer[i]);
+    }
     });
 
     if FAIL_SAFE_MODE.load(Ordering::SeqCst) {
-        println!("System is now in fail-safe mode.");
+    println!("System is now in fail-safe mode.");
     }
 
     match result {
-        Ok(_) => println!("No panic occurred."),
-        Err(_) => println!("Panic caught! Execution continues."),
+    Ok(_) => println!("No panic occurred."),
+    Err(_) => println!("Panic caught! Execution continues."),
     }
 
     let my_array = [2.5, 4.0, 3.8];
@@ -266,7 +297,7 @@ fn main() {
     let mut sum = 0;
 
     for num in her_array {
-        sum += num;
+    sum += num;
     }
 
     println!("sum: {}", sum);
@@ -309,7 +340,7 @@ fn main() {
     println!("s4: {:?}", s4);
 
     for i in s4 {
-        sum += i;
+    sum += i;
     }
 
     println!("sum : {}", sum);
@@ -318,13 +349,13 @@ fn main() {
     let age = 19;
 
     let message = if age < 18 {
-        println!("this is if block");
-        // "you cannot vote"
-        100;
+    println!("this is if block");
+    // "you cannot vote"
+    100;
     } else {
-        println!("this is else block");
-        // "you still not voting because systems is rigged^^"
-        2000; // returns unit type ()
+    println!("this is else block");
+    // "you still not voting because systems is rigged^^"
+    2000; // returns unit type ()
     };
 
     println!("{:?}", message);
@@ -333,44 +364,44 @@ fn main() {
     let point = (3, -7);
 
     match point {
-        (_, y) if y < 0 => {
-            println!("Second element is negative: {}", y);
-            println!("Take action 1");
-        }
-        (0, 0) => {
-            println!("Point is zero");
-            println!("Take action 2");
-        }
-        _ => println!("All fine"),
+    (_, y) if y < 0 => {
+    println!("Second element is negative: {}", y);
+    println!("Take action 1");
+    }
+    (0, 0) => {
+    println!("Point is zero");
+    println!("Take action 2");
+    }
+    _ => println!("All fine"),
     }
 
     let array1 = [1, 2, 3, -1];
 
     let invalid_array = match array1 {
-        [n,_,_,_] | [_,n,_,_] |
-            [_,_,n,_] | [_,_,_,n] if n < 0 => {
-                true
-            }
-        _ => false,
+    [n,_,_,_] | [_,n,_,_] |
+    [_,_,n,_] | [_,_,_,n] if n < 0 => {
+    true
+    }
+    _ => false,
     };
 
     if invalid_array {
-        println!("Array is invalid");
+    println!("Array is invalid");
     } else {
-        println!("Array is valid");
+    println!("Array is valid");
     }
 
     // match macro >> matches!(expression, pattern)
     let array2 = [5, 6, 7, -8];
     let array_validity = matches!(array2,
-        [n,_,_,_] | [_,n,_,_] |
-        [_,_,n,_] | [_,_,_,n] if n < 0
+    [n,_,_,_] | [_,n,_,_] |
+    [_,_,n,_] | [_,_,_,n] if n < 0
     );
 
     if array_validity {
-        println!("Array2 is invalid");
+    println!("Array2 is invalid");
     } else {
-        println!("Array2 is valid");
+    println!("Array2 is valid");
     }
 
     // if - let 
@@ -379,11 +410,11 @@ fn main() {
     let point = (2, 4);
 
     if let (_, y @ 1..=4) = point {
-        println!("y = {} is withing the range 1..=4", y);
+    println!("y = {} is withing the range 1..=4", y);
     } else  if let (0, 0) = point {
-        println!("Point is at the origin");
+    println!("Point is at the origin");
     } else {
-        println!("Something else here...");
+    println!("Something else here...");
     }
 
     // threads
@@ -392,9 +423,9 @@ fn main() {
     let data = 42;
 
     /*
-       let handle1 = thread::spawn(|| {
-       println!("Thread 1 reads data: {}", data);
-       });
+    let handle1 = thread::spawn(|| {
+    println!("Thread 1 reads data: {}", data);
+    });
 
     // impossible >> owndership expands the lifetime of thread 1
     let handle2 = thread::spawn(|| {
