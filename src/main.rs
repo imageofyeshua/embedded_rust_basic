@@ -13,6 +13,37 @@ enum CarStatus {
     Broken
 }
 
+enum Shape {
+    Circle { x: f32, y: f32, radius: f32},
+    Rectangle{ x: f32, y: f32, h: f32, w: f32 },
+    Square(f32, f32, f32),
+}
+
+impl Shape {
+    fn new_circle(x: f32, y: f32, radius: f32) -> Self {
+        Shape::Circle { x, y, radius }
+    }
+
+    fn new_rectangle(x: f32, y: f32, h: f32, w: f32) -> Self {
+        Shape::Rectangle { x, y, h, w }
+    }
+
+    fn area(&self) -> f32 {
+        match self {
+            Shape::Circle {radius: r, ..} => {
+                std::f32::consts::PI * r * r
+            }
+
+            Shape::Rectangle { h: height, w: width, .. } => {
+                height * width
+            }
+            Shape::Square(_,_,s) => {
+                s * s
+            }
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 struct Point {
     x: f32,
@@ -155,6 +186,24 @@ fn main() {
 
         _ => println!("Car is not moving up"),
     }
+
+    let circle = Shape::new_circle(0_f32, 2.0, 4.5);
+    let mut area = circle.area();
+    println!("Circle = {}", area);
+
+    let square = Shape::new_rectangle(0_f32, 0_f32, 23.3, 34.9);
+    area = square.area();
+    println!("Rectangle = {}", area);
+
+    let v_1 = Some(20);
+    let v_2: Option<String> = Some("Park".to_string());
+    let v_3: Option<i32> = None;
+    let v_4 = Option::<i32>::None;
+
+    println!("Some: {:?}", v_1);
+    println!("Some String: {:?}", v_2);
+    println!("None i32: {:?}", v_3);
+    println!("None i32: {:?}", v_4);
 
     /*
     let user = Person::default();
@@ -492,4 +541,25 @@ fn main() {
     slice_of_numbers[0] = 99;
     println!("{:?}", slice_of_numbers);
     */
+    let my_array = [1, 2, 5, 9, 10];
+    let index = find_value(&my_array, 9);
+    if let Some(i) = index {
+        println!("Found at index {}", i);
+        println!("{}", my_array[i as usize]);
+    } else {
+        println!("Value is not found in the array");
+    }
 }
+
+fn find_value(array: &[i32], target: i32) -> Option<i32> {
+    for (index, value) in array.iter().enumerate() {
+        if *value == target {
+            return Some(index as i32);
+        }
+    }
+
+    None
+}
+
+
+
