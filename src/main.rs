@@ -549,6 +549,23 @@ fn main() {
     } else {
         println!("Value is not found in the array");
     }
+
+    let c = add_strings("Abide ", "in Hope");
+
+    match c {
+        Ok(v) => println!("Result = {}", v),
+        Err(e) => println!("{}", e)
+    }
+}
+
+fn add_strings(s1: &str, s2: &str) -> Result<String, String> {
+    if s1.is_empty() || s2.is_empty() {
+        return Err("Empty string is detected".to_string());
+    }
+
+    let c = format!("{} {}", s1, s2);
+
+    Ok(c)
 }
 
 fn find_value(array: &[i32], target: i32) -> Option<i32> {
