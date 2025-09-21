@@ -1,5 +1,6 @@
 use core::slice;
 use std::{array, f32::consts, panic, sync::atomic::{AtomicBool, Ordering}, thread};
+use std::cmp;
 
 static FAIL_SAFE_MODE: AtomicBool = AtomicBool::new(false);
 static mut COUNTER: u32 = 0;
@@ -149,7 +150,7 @@ fn print_shape_circle(circle: &Circle) {
 }
 
 #[allow(unused_variables)]
-fn main() -> Result<(), AddStringError> {
+fn main() /* -> Result<(), AddStringError> */ {
 
     let mut p = Person {
         name: String::from("Alice"),
@@ -569,17 +570,39 @@ fn main() -> Result<(), AddStringError> {
         println!("Value is not found in the array");
     }
 
-    let c = add_strings("Abide ", "in Hope")?;
-    println!("{}", c);
-    Ok(())
+    // let c = add_strings("Abide ", "in Hope")?;
+    // println!("{}", c);
+    // Ok(())
 
+    let arr_int = [1, 2, 3, 4, 5];
+    println!("Max int: {:?}", find_max_element(&arr_int));
+    let arr_float = [1.3, 2.9, 3.3, 4.7, 5.2];
+    println!("Max float: {:?}", find_max_element(&arr_float));
 
     /*
     match c {
-        Ok(v) => println!("Result = {}", v),
-        Err(e) => println!("{}", e.description())
+    Ok(v) => println!("Result = {}", v),
+    Err(e) => println!("{}", e.description())
     }
     */
+}
+
+fn find_max_element<T>(v: &[T]) -> Option<T>
+    where T: cmp::PartialOrd + Copy 
+{
+    if v.is_empty() {
+        return None;
+    }
+
+    let mut max = v[0];
+
+    for &n in v {
+        if n > max {
+            max = n;
+        }
+    }
+
+    Some(max)
 }
 
 fn add_strings(s1: &str, s2: &str) -> Result<String, AddStringError> {
