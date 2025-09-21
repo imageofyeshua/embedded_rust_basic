@@ -19,6 +19,25 @@ enum Shape {
     Square(f32, f32, f32),
 }
 
+#[derive(Debug)]
+enum AddStringError {
+    EmptyString,
+    LengthMismatch
+}
+
+impl AddStringError {
+    fn description(&self) -> &str {
+        match self {
+            Self::EmptyString => {
+                "Empty string detected"
+            }
+            Self::LengthMismatch => {
+                "Length did not match"
+            }
+        }
+    }
+}
+
 impl Shape {
     fn new_circle(x: f32, y: f32, radius: f32) -> Self {
         Shape::Circle { x, y, radius }
@@ -130,7 +149,7 @@ fn print_shape_circle(circle: &Circle) {
 }
 
 #[allow(unused_variables)]
-fn main() {
+fn main() -> Result<(), AddStringError> {
 
     let mut p = Person {
         name: String::from("Alice"),
@@ -550,26 +569,33 @@ fn main() {
         println!("Value is not found in the array");
     }
 
-    let c = add_strings("Abide ", "in Hope");
+    let c = add_strings("Abide ", "in Hope")?;
+    println!("{}", c);
+    Ok(())
 
+
+    /*
     match c {
         Ok(v) => println!("Result = {}", v),
-        Err(e) => println!("{}", e)
+        Err(e) => println!("{}", e.description())
     }
+    */
 }
 
-fn add_strings(s1: &str, s2: &str) -> Result<String, String> {
+fn add_strings(s1: &str, s2: &str) -> Result<String, AddStringError> {
     if s1.is_empty() || s2.is_empty() {
-        return Err("Empty string is detected".to_string());
+        return Err(AddStringError::EmptyString);
     }
 
-    let c = format!("{} {}", s1, s2);
+    if s1.len() != s2.len() {
+        return Err(AddStringError::EmptyString);
+    }
 
-    Ok(c)
+    Ok(format!("{} {}", s1, s2))
 }
 
 fn find_value(array: &[i32], target: i32) -> Option<i32> {
-    for (index, value) in array.iter().enumerate() {
+    for (index, value) in array.iter().enumerate()   {
         if *value == target {
             return Some(index as i32);
         }
@@ -577,6 +603,3 @@ fn find_value(array: &[i32], target: i32) -> Option<i32> {
 
     None
 }
-
-
-
